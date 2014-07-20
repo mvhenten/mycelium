@@ -7,7 +7,7 @@ var program = require('commander'),
     initPackage = require('./lib/init-package'),
     generate = require('./lib/generate'),
     fs = require('fs'),
-    builder = require('./lib/build'),
+    builder = require('./lib/builder'),
     Path = require('path');
 
 var OPTIONS = {
