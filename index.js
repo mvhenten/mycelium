@@ -4,14 +4,11 @@
 
 var program = require('commander'),
     _ = require('lodash'),
-    initPackage = require('./lib/init-package'),
-    generate = require('./lib/generate'),
-    fs = require('fs'),
-    builder = require('./lib/builder'),
+    build = require('./lib/build'),
     Path = require('path');
 
 var OPTIONS = {
-    templateEngine: ['-t, --template <template>', 'specify a global template file', String, 200],
+    template: ['-t, --template <template>', 'specify a global template file', String, 200],
     engine: ['-e, --engine <name>', 'specify the templating engine', String, 'swig'],
     port: ['-p, --port <port>', 'specify the port [3000]', Number, 3000]
 };
@@ -27,33 +24,23 @@ function help() {
     console.log('');
 }
 
-function build(src, dst) {
-    var options = {
-        source: Path.resolve(src),
-        target: Path.resolve(dst),
-        globals: _.reduce(OPTIONS, function(options, value, key) {
-            options[key] = program[key];
-            return options;
-        }, {})
-    };
-
-    generate(options, function(err, options) {
-        var build = [builder.toString(), 'renderSite(' + JSON.stringify(options.pages) + ', process.exit );'].join('\n');
-
-        fs.writeFile('build.js', build, function(err) {
-            if (err) throw err;
-
-            initPackage(options, process.exit);
-        });
-    });
-}
-
 program.on('--help', help);
 
 program
     .command('build <src> <dst>')
     .description('build site')
-    .action(build);
+    .action(function(src, dst) {
+        var options = {
+            source: Path.resolve(src),
+            target: Path.resolve(dst),
+            globals: _.reduce(options, function(OPTIONS, value, key) {
+                options[key] = program[key];
+                return options;
+            }, {})
+        };
+
+        build(options);
+    });
 
 program
     .command('*')
