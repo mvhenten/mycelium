@@ -7,14 +7,27 @@ var program = require('commander'),
     build = require('./lib/build'),
     Path = require('path');
 
-var OPTIONS = {
-    template: ['-t, --template <template>', 'specify a global template file', String, 200],
-    engine: ['-e, --engine <name>', 'specify the templating engine', String, 'swig'],
-    port: ['-p, --port <port>', 'specify the port [3000]', Number, 3000]
-};
+var OPTIONS = [
+  {
+    name: 'template',
+    default: null,
+    option: ['-t, --template <template>', 'specify a global template file', String ]
+  },
+  {
+    name: 'engine',
+    default: 'swig',
+    option: ['-e, --engine <name>', 'specify the templating engine', String ]
+  },
+  {
+    name: 'port',
+    default: 3000,
+    option: ['-p, --port <port>', 'specify the port [3000]', Number ]
+  },
+];
 
-_.each(OPTIONS, function(opt) {
-    program.option.apply(program, opt);
+
+OPTIONS.forEach( function(opt) {
+    program.option.apply(program, opt.option );
 });
 
 function help() {
@@ -33,9 +46,9 @@ program
         var options = {
             source: Path.resolve(src),
             target: Path.resolve(dst),
-            globals: _.reduce(options, function(OPTIONS, value, key) {
-                options[key] = program[key];
-                return options;
+            globals: OPTIONS.reduce( function( globals, value, key) {
+                globals[value.name] = program[value.name];
+                return globals;
             }, {})
         };
 
