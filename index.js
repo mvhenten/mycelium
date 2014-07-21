@@ -3,31 +3,30 @@
 'use strict';
 
 var program = require('commander'),
-    _ = require('lodash'),
+    serve = require('./lib/serve'),
     build = require('./lib/build'),
     Path = require('path');
 
 var OPTIONS = [
-  {
-    name: 'template',
-    default: null,
-    option: ['-t, --template <template>', 'specify a global template file', String ]
+    {
+        name: 'template',
+        default: null,
+        option: ['-t, --template <template>', 'specify a global template file', String]
   },
-  {
-    name: 'engine',
-    default: 'swig',
-    option: ['-e, --engine <name>', 'specify the templating engine', String ]
+    {
+        name: 'engine',
+        default: 'swig',
+        option: ['-e, --engine <name>', 'specify the templating engine', String]
   },
-  {
-    name: 'port',
-    default: 3000,
-    option: ['-p, --port <port>', 'specify the port [3000]', Number ]
+    {
+        name: 'port',
+        default: 3000,
+        option: ['-p, --port <port>', 'specify the port [3000]', Number]
   },
 ];
 
-
-OPTIONS.forEach( function(opt) {
-    program.option.apply(program, opt.option );
+OPTIONS.forEach(function(opt) {
+    program.option.apply(program, opt.option);
 });
 
 function help() {
@@ -37,22 +36,31 @@ function help() {
     console.log('');
 }
 
+function globals(src, dst) {
+    return {
+        source: Path.resolve(src),
+        target: Path.resolve(dst),
+        globals: OPTIONS.reduce(function(globals, value) {
+            globals[value.name] = program[value.name] || value.default;
+            return globals;
+        }, {})
+    };
+}
+
 program.on('--help', help);
+
+program
+    .command('serve <src>')
+    .description('serve site')
+    .action(function(src) {
+        serve(globals(src, '__public'));
+    });
 
 program
     .command('build <src> <dst>')
     .description('build site')
     .action(function(src, dst) {
-        var options = {
-            source: Path.resolve(src),
-            target: Path.resolve(dst),
-            globals: OPTIONS.reduce( function( globals, value, key) {
-                globals[value.name] = program[value.name];
-                return globals;
-            }, {})
-        };
-
-        build(options);
+        build(globals(src, dst));
     });
 
 program
