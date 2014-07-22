@@ -7,4 +7,5 @@ module.exports = {
     build: require('./lib/build'),
     serve: require('./lib/serve'),
     cli: require('./lib/cli'),
+    run: require('./lib/run')
 };
