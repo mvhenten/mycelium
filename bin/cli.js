@@ -6,6 +6,17 @@ var Mycelium = require('../index'),
     program = require('commander'),
     Path = require('path');
 
+function options(program) {
+    return {
+        port: program.port || 3210,
+        watch: program.watch || false,
+        templatePath: program.templatePath || 'swig',
+        engine: program.engine || 'swig',
+        config: program.config || 'mycelium.json'
+    };
+}
+
+
 var OPTIONS = [
     {
         name: 'template',
@@ -28,6 +39,8 @@ OPTIONS.forEach(function(opt) {
     program.option.apply(program, opt.option);
 });
 
+
+
 function help() {
     console.log('Usage:\n');
     console.log('$ cmd.js build content public\n');
@@ -35,16 +48,6 @@ function help() {
     console.log('');
 }
 
-function globals(src, dst) {
-    return {
-        source: Path.resolve(src),
-        target: Path.resolve(dst),
-        globals: OPTIONS.reduce(function(globals, value) {
-            globals[value.name] = program[value.name] || value.default;
-            return globals;
-        }, {})
-    };
-}
 
 program.on('--help', help);
 
