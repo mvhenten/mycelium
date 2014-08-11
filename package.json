@@ -1,6 +1,6 @@
 {
     "name": "mycelium",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "A Static Site Generator Generator",
     "main": "index.js",
     "dependencies": {
@@ -21,7 +21,8 @@
         "cli-color": "^0.3.2",
         "chokidar": "^0.8.2",
         "rmdir": "^1.0.4",
-        "strftime": "^0.8.1"
+        "strftime": "^0.8.1",
+        "builtins": "0.0.5"
     },
     "devDependencies": {
         "js-beautify": "^1.5.1",
