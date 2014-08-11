@@ -1,6 +1,6 @@
 {
     "name": "mycelium",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "A Static Site Generator Generator",
     "main": "index.js",
     "dependencies": {
